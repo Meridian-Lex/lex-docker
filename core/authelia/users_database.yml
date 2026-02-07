@@ -1,0 +1,12 @@
+# Users database for Authelia
+# Use: authelia crypto hash generate pbkdf2 --password 'yourpassword'
+# to generate password hashes
+
+users:
+  # Example user - replace with actual user
+  # admin:
+  #   displayname: "Admin User"
+  #   password: "$pbkdf2-sha512$..."
+  #   email: admin@lex.local
+  #   groups:
+  #     - admins

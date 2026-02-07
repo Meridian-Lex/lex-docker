@@ -1,0 +1,46 @@
+theme: dark
+
+server:
+  host: 0.0.0.0
+  port: 9091
+
+log:
+  level: info
+
+jwt_secret: ${AUTHELIA_JWT_SECRET}
+
+default_redirection_url: https://lex.local
+
+totp:
+  issuer: lex.local
+
+authentication_backend:
+  file:
+    path: /config/users_database.yml
+
+access_control:
+  default_policy: one_factor
+  rules:
+    - domain: "*.lex.local"
+      policy: one_factor
+
+session:
+  name: authelia_session
+  secret: ${AUTHELIA_SESSION_SECRET}
+  expiration: 1h
+  inactivity: 5m
+  domain: lex.local
+
+regulation:
+  max_retries: 3
+  find_time: 2m
+  ban_time: 5m
+
+storage:
+  encryption_key: ${AUTHELIA_ENCRYPTION_KEY}
+  local:
+    path: /config/db.sqlite3
+
+notifier:
+  filesystem:
+    filename: /config/notification.txt
