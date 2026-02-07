@@ -42,3 +42,21 @@ services:
       start_period: 40s
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: lex-portainer
+    restart: unless-stopped
+    ports:
+      - "9443:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer_data:/data
+    networks:
+      - frontend-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "https://localhost:9443/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
