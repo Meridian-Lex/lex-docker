@@ -1,0 +1,14 @@
+version: '3.8'
+
+networks:
+  frontend-network:
+    name: lex-frontend
+    driver: bridge
+
+  backend-network:
+    name: lex-backend
+    driver: bridge
+
+  monitoring-network:
+    name: lex-monitoring
+    driver: bridge
