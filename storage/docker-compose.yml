@@ -52,3 +52,32 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  opensearch:
+    image: opensearchproject/opensearch:2.11.1
+    container_name: lex-opensearch
+    restart: unless-stopped
+    env_file:
+      - ../docker-secrets.env
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - DISABLE_SECURITY_PLUGIN=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+    networks:
+      - backend-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-k", "-u", "admin:${OPENSEARCH_INITIAL_ADMIN_PASSWORD}", "https://localhost:9200/_cluster/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
