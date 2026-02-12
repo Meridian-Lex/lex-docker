@@ -10,7 +10,7 @@ DOCKER_SECRETS_ENV="$(dirname "$0")/../docker-secrets.env"
 echo "==> Initializing Docker secrets for lex-docker"
 
 # Check if secrets.yaml exists
-if [[ ! -f "$SECRETS_FILE" ]]; then
+if [[! -f "$SECRETS_FILE" ]]; then
     echo "ERROR: $SECRETS_FILE not found"
     exit 1
 fi
@@ -37,7 +37,7 @@ set_secret() {
     local value="$2"
 
     # Create docker_services section if it doesn't exist
-    if ! check_docker_services_section; then
+    if! check_docker_services_section; then
         echo "docker_services:" >> "$SECRETS_FILE"
     fi
 
@@ -46,7 +46,7 @@ set_secret() {
 }
 
 # Ensure yq is available
-if ! command -v yq &> /dev/null; then
+if! command -v yq &> /dev/null; then
     echo "ERROR: yq is required but not installed"
     echo "Install with: sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && sudo chmod +x /usr/local/bin/yq"
     exit 1
@@ -148,4 +148,4 @@ chmod 600 "$SECRETS_FILE"
 echo "==> Docker secrets exported to $DOCKER_SECRETS_ENV"
 echo "==> File permissions set to 600"
 echo ""
-echo "✓ Secrets initialization complete"
+echo "[OK] Secrets initialization complete"

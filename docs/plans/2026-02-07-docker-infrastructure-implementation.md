@@ -28,7 +28,7 @@ mkdir -p core storage communication observability utilities scripts
 touch core/.gitkeep storage/.gitkeep communication/.gitkeep observability/.gitkeep utilities/.gitkeep scripts/.gitkeep
 ```
 
-**Step 2: Update .gitignore for Docker artifacts**
+**Step 2: Update.gitignore for Docker artifacts**
 
 Add to `.gitignore`:
 ```
@@ -48,7 +48,7 @@ Expected: Shows all service group directories and scripts/
 **Step 4: Commit**
 
 ```bash
-git add .
+git add.
 git commit -m "feat: create service group directory structure"
 git push origin master
 ```
@@ -99,7 +99,7 @@ DOCKER_SECRETS_ENV="$(dirname "$0")/../docker-secrets.env"
 echo "==> Initializing Docker secrets for lex-docker"
 
 # Check if secrets.yaml exists
-if [[ ! -f "$SECRETS_FILE" ]]; then
+if [[! -f "$SECRETS_FILE" ]]; then
     echo "ERROR: $SECRETS_FILE not found"
     exit 1
 fi
@@ -126,7 +126,7 @@ set_secret() {
     local value="$2"
 
     # Create docker_services section if it doesn't exist
-    if ! check_docker_services_section; then
+    if! check_docker_services_section; then
         echo "docker_services:" >> "$SECRETS_FILE"
     fi
 
@@ -135,7 +135,7 @@ set_secret() {
 }
 
 # Ensure yq is available
-if ! command -v yq &> /dev/null; then
+if! command -v yq &> /dev/null; then
     echo "ERROR: yq is required but not installed"
     echo "Install with: sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && sudo chmod +x /usr/local/bin/yq"
     exit 1
@@ -237,7 +237,7 @@ chmod 600 "$SECRETS_FILE"
 echo "==> Docker secrets exported to $DOCKER_SECRETS_ENV"
 echo "==> File permissions set to 600"
 echo ""
-echo "✓ Secrets initialization complete"
+echo "[OK] Secrets initialization complete"
 ```
 
 **Step 3: Make script executable**
@@ -387,8 +387,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - traefik_certs:/certs
-      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
-      - ./traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro
+      -./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      -./traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro
     networks:
       - frontend-network
       - backend-network
@@ -553,11 +553,11 @@ File: `core/authelia/users_database.yml`
 users:
   # Example user - replace with actual user
   # admin:
-  #   displayname: "Admin User"
-  #   password: "$pbkdf2-sha512$..."
-  #   email: admin@lex.local
-  #   groups:
-  #     - admins
+  # displayname: "Admin User"
+  # password: "$pbkdf2-sha512$..."
+  # email: admin@lex.local
+  # groups:
+  # - admins
 ```
 
 **Step 3: Add Authelia service**
@@ -569,13 +569,13 @@ Add to `core/docker-compose.yml` services:
     container_name: lex-authelia
     restart: unless-stopped
     env_file:
-      - ../docker-secrets.env
+      -../docker-secrets.env
     ports:
       - "9091:9091"
     volumes:
       - authelia_config:/config
-      - ./authelia/configuration.yml:/config/configuration.yml:ro
-      - ./authelia/users_database.yml:/config/users_database.yml:ro
+      -./authelia/configuration.yml:/config/configuration.yml:ro
+      -./authelia/users_database.yml:/config/users_database.yml:ro
     networks:
       - frontend-network
     depends_on:
@@ -675,7 +675,7 @@ services:
     container_name: lex-postgres
     restart: unless-stopped
     env_file:
-      - ../docker-secrets.env
+      -../docker-secrets.env
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
@@ -683,7 +683,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./postgres/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+      -./postgres/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
     networks:
       - backend-network
     healthcheck:
@@ -778,7 +778,7 @@ Add to `storage/docker-compose.yml` services:
     container_name: lex-opensearch
     restart: unless-stopped
     env_file:
-      - ../docker-secrets.env
+      -../docker-secrets.env
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
@@ -859,7 +859,7 @@ Add to `storage/docker-compose.yml` services:
     container_name: lex-rabbitmq
     restart: unless-stopped
     env_file:
-      - ../docker-secrets.env
+      -../docker-secrets.env
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -943,7 +943,7 @@ services:
     volumes:
       - ntfy_cache:/var/cache/ntfy
       - ntfy_config:/etc/ntfy
-      - ./ntfy/server.yml:/etc/ntfy/server.yml:ro
+      -./ntfy/server.yml:/etc/ntfy/server.yml:ro
     networks:
       - frontend-network
     healthcheck:
@@ -1084,7 +1084,7 @@ Add to `communication/docker-compose.yml` services:
 ```yaml
   gateway:
     build:
-      context: ./gateway
+      context:./gateway
       dockerfile: Dockerfile
     container_name: lex-gateway
     restart: unless-stopped
@@ -1241,8 +1241,8 @@ services:
       - "9090:9090"
     volumes:
       - prometheus_data:/prometheus
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ./prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+      -./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      -./prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
     networks:
       - monitoring-network
       - backend-network
@@ -1347,7 +1347,7 @@ Add to `observability/docker-compose.yml` services:
       - "3100:3100"
     volumes:
       - loki_data:/loki
-      - ./loki/loki.yml:/etc/loki/local-config.yaml:ro
+      -./loki/loki.yml:/etc/loki/local-config.yaml:ro
     command: -config.file=/etc/loki/local-config.yaml
     networks:
       - backend-network
@@ -1369,7 +1369,7 @@ Add to `observability/docker-compose.yml` services:
     container_name: lex-grafana
     restart: unless-stopped
     env_file:
-      - ../docker-secrets.env
+      -../docker-secrets.env
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SERVER_ROOT_URL=http://localhost:3000
@@ -1536,7 +1536,7 @@ NTFY_URL="http://localhost:2586/lex-system-alerts"
 echo "==> Rotating TLS certificates"
 
 # Check if Traefik volume exists
-if [[ ! -d "$CERT_DIR" ]]; then
+if [[! -d "$CERT_DIR" ]]; then
     echo "ERROR: Traefik certs volume not found at $CERT_DIR"
     exit 1
 fi
@@ -1555,17 +1555,17 @@ chmod 600 "$KEY_FILE"
 # Calculate next rotation date
 NEXT_ROTATION=$(date -d '+25 days' '+%Y-%m-%d')
 
-echo "✓ Certificate rotated successfully"
-echo "  Next rotation: $NEXT_ROTATION"
+echo "[OK] Certificate rotated successfully"
+echo " Next rotation: $NEXT_ROTATION"
 
 # Notify via ntfy
 if command -v curl &> /dev/null; then
     curl -d "Certificate rotated successfully. Next rotation: $NEXT_ROTATION" \
-         "$NTFY_URL" 2>/dev/null || echo "  (Failed to send ntfy notification)"
+         "$NTFY_URL" 2>/dev/null || echo " (Failed to send ntfy notification)"
 fi
 
 # Traefik will automatically reload the certificate via file watcher
-echo "  Traefik will hot-reload the new certificate"
+echo " Traefik will hot-reload the new certificate"
 ```
 
 **Step 2: Make script executable**
@@ -1611,9 +1611,9 @@ echo "==> Deploying lex-docker infrastructure"
 echo ""
 
 # Check if secrets are initialized
-if [[ ! -f "$PROJECT_ROOT/docker-secrets.env" ]]; then
+if [[! -f "$PROJECT_ROOT/docker-secrets.env" ]]; then
     echo "ERROR: docker-secrets.env not found"
-    echo "Run: ./scripts/init-docker-secrets.sh"
+    echo "Run:./scripts/init-docker-secrets.sh"
     exit 1
 fi
 
@@ -1623,19 +1623,19 @@ wait_for_health() {
     local max_wait=60
     local count=0
 
-    echo "  Waiting for $service to be healthy..."
+    echo " Waiting for $service to be healthy..."
 
-    while ! docker inspect "$service" --format='{{.State.Health.Status}}' 2>/dev/null | grep -q "healthy"; do
+    while! docker inspect "$service" --format='{{.State.Health.Status}}' 2>/dev/null | grep -q "healthy"; do
         sleep 2
         count=$((count + 2))
 
         if [[ $count -ge $max_wait ]]; then
-            echo "  WARNING: $service did not become healthy within ${max_wait}s"
+            echo " WARNING: $service did not become healthy within ${max_wait}s"
             return 1
         fi
     done
 
-    echo "  ✓ $service is healthy"
+    echo " [OK] $service is healthy"
     return 0
 }
 
@@ -1644,7 +1644,7 @@ echo "==> Phase 1: Core Infrastructure"
 docker-compose -f core/docker-compose.yml up -d
 wait_for_health "lex-traefik" || true
 wait_for_health "lex-authelia" || true
-echo "✓ Core services deployed"
+echo "[OK] Core services deployed"
 echo ""
 
 # Phase 2: Storage Layer
@@ -1653,7 +1653,7 @@ docker-compose -f storage/docker-compose.yml up -d
 wait_for_health "lex-postgres" || true
 wait_for_health "lex-qdrant" || true
 wait_for_health "lex-rabbitmq" || true
-echo "✓ Storage services deployed"
+echo "[OK] Storage services deployed"
 echo ""
 
 # Phase 3: Communication
@@ -1661,7 +1661,7 @@ echo "==> Phase 3: Communication"
 docker-compose -f communication/docker-compose.yml up -d
 wait_for_health "lex-ntfy" || true
 wait_for_health "lex-gateway" || true
-echo "✓ Communication services deployed"
+echo "[OK] Communication services deployed"
 echo ""
 
 # Phase 4: Observability
@@ -1669,13 +1669,13 @@ echo "==> Phase 4: Observability"
 docker-compose -f observability/docker-compose.yml up -d
 wait_for_health "lex-prometheus" || true
 wait_for_health "lex-grafana" || true
-echo "✓ Observability services deployed"
+echo "[OK] Observability services deployed"
 echo ""
 
 # Phase 5: Utilities
 echo "==> Phase 5: Utilities"
 docker-compose -f utilities/docker-compose.yml up -d
-echo "✓ Utility services deployed"
+echo "[OK] Utility services deployed"
 echo ""
 
 # Summary
@@ -1683,14 +1683,14 @@ echo "==> Deployment Summary"
 echo ""
 docker ps --filter "name=lex-" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 echo ""
-echo "✓ Full stack deployment complete"
+echo "[OK] Full stack deployment complete"
 echo ""
 echo "Access points:"
-echo "  Portainer:    https://localhost:9443"
-echo "  Grafana:      http://localhost:3000"
-echo "  ntfy:         http://localhost:2586"
-echo "  API Gateway:  http://localhost:8000"
-echo "  FileBrowser:  http://localhost:8090"
+echo " Portainer: https://localhost:9443"
+echo " Grafana: http://localhost:3000"
+echo " ntfy: http://localhost:2586"
+echo " API Gateway: http://localhost:8000"
+echo " FileBrowser: http://localhost:8090"
 ```
 
 **Step 2: Make script executable**
@@ -1752,7 +1752,7 @@ echo "Stopping core..."
 docker-compose -f core/docker-compose.yml down
 
 echo ""
-echo "✓ All services stopped"
+echo "[OK] All services stopped"
 echo ""
 
 # Ask about volume cleanup
@@ -1768,13 +1768,13 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
                      --filter "name=loki_data" --filter "name=ntfy_cache" \
                      --filter "name=ntfy_config" --filter "name=fb_db" \
                      -q | xargs -r docker volume rm
-    echo "✓ Volumes removed"
+    echo "[OK] Volumes removed"
 else
-    echo "✓ Volumes preserved"
+    echo "[OK] Volumes preserved"
 fi
 
 echo ""
-echo "✓ Teardown complete"
+echo "[OK] Teardown complete"
 ```
 
 **Step 2: Make script executable**
@@ -1886,7 +1886,7 @@ curl -d "Task started" http://localhost:8000/ntfy/lex-agent-status
 # Query Qdrant vectors
 curl http://localhost:8000/qdrant/collections/memories/points/search \
   -H "Content-Type: application/json" \
-  -d '{"vector": [0.1, 0.2, ...], "limit": 5}'
+  -d '{"vector": [0.1, 0.2,...], "limit": 5}'
 
 # Search OpenSearch logs
 curl http://localhost:8000/opensearch/_search?q=error
@@ -2082,11 +2082,11 @@ Step-by-step deployment instructions for lex-docker infrastructure.
 
 ```bash
 # Verify Docker
-docker --version  # Need 24.0+
-docker-compose --version  # Need 2.20+
+docker --version # Need 24.0+
+docker-compose --version # Need 2.20+
 
 # Verify yq
-yq --version  # Need 4.0+
+yq --version # Need 4.0+
 
 # If yq not installed:
 sudo wget -qO /usr/local/bin/yq \
@@ -2114,13 +2114,13 @@ cd lex-docker
 ==> Secrets synchronized with /home/meridian/.config/secrets.yaml
 ==> Docker secrets exported to docker-secrets.env
 ==> File permissions set to 600
-✓ Secrets initialization complete
+[OK] Secrets initialization complete
 ```
 
 **Verify:**
 ```bash
-ls -la docker-secrets.env  # Should show 600 permissions
-grep "POSTGRES_PASSWORD" docker-secrets.env  # Should show generated password
+ls -la docker-secrets.env # Should show 600 permissions
+grep "POSTGRES_PASSWORD" docker-secrets.env # Should show generated password
 ```
 
 ### 4. Generate Initial Certificate
@@ -2221,7 +2221,7 @@ docker exec lex-authelia authelia crypto hash generate pbkdf2 --password 'yourpa
 users:
   admin:
     displayname: "Admin User"
-    password: "$pbkdf2-sha512$..."  # From step 1
+    password: "$pbkdf2-sha512$..." # From step 1
     email: admin@lex.local
     groups:
       - admins
@@ -2330,7 +2330,7 @@ docker logs lex-postgres
 
 ```bash
 # Check healthcheck output
-docker inspect lex-<service> --format='{{json .State.Health}}' | jq
+docker inspect lex-<service> --format='{{json.State.Health}}' | jq
 
 # Check logs
 docker logs lex-<service>
@@ -2365,7 +2365,7 @@ docker network ls | grep lex-
 docker network inspect lex-backend
 
 # Check container network membership
-docker inspect lex-postgres --format='{{json .NetworkSettings.Networks}}' | jq
+docker inspect lex-postgres --format='{{json.NetworkSettings.Networks}}' | jq
 
 # Recreate networks
 docker-compose -f core/docker-compose.yml down
@@ -2376,7 +2376,7 @@ docker-compose -f core/docker-compose.yml up -d
 
 ```bash
 # Find what's using the port
-sudo ss -tulpn | grep :<port>
+sudo ss -tulpn | grep:<port>
 
 # Change port in compose file
 vim <group>/docker-compose.yml
