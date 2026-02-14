@@ -1,0 +1,69 @@
+version: '3.8'
+
+# Inference Stack — Ollama + Granite Embeddings
+#
+# DEPLOYMENT: This stack runs on a SEPARATE GPU host, not the primary vessel.
+# It is opt-in and requires an NVIDIA GPU with at least 6GB VRAM.
+#
+# USAGE:
+#   GPU host:   docker compose -f inference/docker-compose.yml up -d
+#   Pull model: docker compose -f inference/docker-compose.yml run --rm pull-models
+#
+# stratavore-knowledge connects via OLLAMA_HOST=http://<gpu-host-ip>:11434
+# The default OLLAMA_HOST in the knowledge service is http://localhost:11434.
+# If unreachable, the indexer degrades gracefully (warns, skips embedding).
+
+networks:
+  inference-network:
+    name: stratavore-inference
+    driver: bridge
+
+volumes:
+  ollama_data:
+
+services:
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: stratavore-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - inference-network
+    # GPU passthrough — requires NVIDIA Container Toolkit on host.
+    # Remove the 'deploy' section entirely on CPU-only hosts (much slower).
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:11434/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # One-shot container to pre-pull the granite-embedding model.
+  # Run manually after first deployment: docker compose run --rm pull-models
+  pull-models:
+    image: ollama/ollama:latest
+    container_name: stratavore-ollama-init
+    entrypoint: ["/bin/sh", "/scripts/pull-models.sh"]
+    volumes:
+      - ollama_data:/root/.ollama
+      - ./scripts/pull-models.sh:/scripts/pull-models.sh:ro
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    networks:
+      - inference-network
+    depends_on:
+      ollama:
+        condition: service_healthy
+    profiles:
+      - init
