@@ -3,13 +3,13 @@ version: '3.8'
 networks:
   monitoring-network:
     external: true
-    name: lex-monitoring
+    name: stratavore-monitoring
   backend-network:
     external: true
-    name: lex-backend
+    name: stratavore-backend
   frontend-network:
     external: true
-    name: lex-frontend
+    name: stratavore-frontend
 
 volumes:
   prometheus_data:
@@ -19,7 +19,7 @@ volumes:
 services:
   prometheus:
     image: prom/prometheus:v2.48.1
-    container_name: lex-prometheus
+    container_name: stratavore-prometheus
     restart: unless-stopped
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -44,7 +44,7 @@ services:
 
   loki:
     image: grafana/loki:2.9.3
-    container_name: lex-loki
+    container_name: stratavore-loki
     restart: unless-stopped
     ports:
       - "3100:3100"
@@ -64,7 +64,7 @@ services:
 
   grafana:
     image: grafana/grafana:10.2.3
-    container_name: lex-grafana
+    container_name: stratavore-grafana
     restart: unless-stopped
     env_file:
       - ../docker-secrets.env
@@ -92,7 +92,7 @@ services:
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
-    container_name: lex-cadvisor
+    container_name: stratavore-cadvisor
     restart: unless-stopped
     privileged: true
     ports:
