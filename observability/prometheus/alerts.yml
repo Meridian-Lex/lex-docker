@@ -1,0 +1,30 @@
+groups:
+  - name: lex_infrastructure
+    interval: 30s
+    rules:
+      - alert: ContainerDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Container {{ $labels.instance }} is down"
+          description: "{{ $labels.job }} on {{ $labels.instance }} has been down for more than 2 minutes"
+
+      - alert: HighMemoryUsage
+        expr: (container_memory_usage_bytes / container_spec_memory_limit_bytes) > 0.90
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High memory usage on {{ $labels.name }}"
+          description: "Container {{ $labels.name }} is using {{ $value | humanizePercentage }} of memory"
+
+      - alert: ServiceHealthcheckFailing
+        expr: container_health_status{status!="healthy"} == 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service healthcheck failing for {{ $labels.name }}"
+          description: "Container {{ $labels.name }} healthcheck has been failing for 2 minutes"
