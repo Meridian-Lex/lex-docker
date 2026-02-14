@@ -3,10 +3,10 @@ version: '3.8'
 networks:
   frontend-network:
     external: true
-    name: lex-frontend
+    name: stratavore-frontend
   backend-network:
     external: true
-    name: lex-backend
+    name: stratavore-backend
 
 volumes:
   ntfy_cache:
@@ -15,7 +15,7 @@ volumes:
 services:
   ntfy:
     image: binwiederhier/ntfy:latest
-    container_name: lex-ntfy
+    container_name: stratavore-ntfy
     restart: unless-stopped
     command: serve
     ports:

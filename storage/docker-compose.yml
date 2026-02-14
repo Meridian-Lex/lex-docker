@@ -3,7 +3,7 @@ version: '3.8'
 networks:
   backend-network:
     external: true
-    name: lex-backend
+    name: stratavore-backend
 
 volumes:
   postgres_data:
@@ -15,7 +15,7 @@ volumes:
 services:
   postgres:
     image: ankane/pgvector:pg16
-    container_name: lex-postgres
+    container_name: stratavore-postgres
     restart: unless-stopped
     env_file:
       - ../docker-secrets.env
@@ -38,7 +38,7 @@ services:
 
   qdrant:
     image: qdrant/qdrant:v1.7.4
-    container_name: lex-qdrant
+    container_name: stratavore-qdrant
     restart: unless-stopped
     ports:
       - "6333:6333"
@@ -55,7 +55,7 @@ services:
 
   opensearch:
     image: opensearchproject/opensearch:2.11.1
-    container_name: lex-opensearch
+    container_name: stratavore-opensearch
     restart: unless-stopped
     env_file:
       - ../docker-secrets.env
@@ -84,7 +84,7 @@ services:
 
   memgraph:
     image: memgraph/memgraph-platform:2.14.1-memgraph2.14.1-lab2.11.1-mage1.14.1
-    container_name: lex-memgraph
+    container_name: stratavore-memgraph
     restart: unless-stopped
     ports:
       - "7687:7687"
@@ -102,7 +102,7 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.13-management
-    container_name: lex-rabbitmq
+    container_name: stratavore-rabbitmq
     restart: unless-stopped
     env_file:
       - ../docker-secrets.env

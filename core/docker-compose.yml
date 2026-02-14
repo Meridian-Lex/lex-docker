@@ -2,15 +2,15 @@ version: '3.8'
 
 networks:
   frontend-network:
-    name: lex-frontend
+    name: stratavore-frontend
     driver: bridge
 
   backend-network:
-    name: lex-backend
+    name: stratavore-backend
     driver: bridge
 
   monitoring-network:
-    name: lex-monitoring
+    name: stratavore-monitoring
     driver: bridge
 
 volumes:
@@ -21,7 +21,7 @@ volumes:
 services:
   traefik:
     image: traefik:v3.0
-    container_name: lex-traefik
+    container_name: stratavore-traefik
     restart: unless-stopped
     ports:
       - "80:80"
@@ -45,7 +45,7 @@ services:
 
   portainer:
     image: portainer/portainer-ce:latest
-    container_name: lex-portainer
+    container_name: stratavore-portainer
     restart: unless-stopped
     ports:
       - "9443:9443"
@@ -63,7 +63,7 @@ services:
 
   authelia:
     image: authelia/authelia:latest
-    container_name: lex-authelia
+    container_name: stratavore-authelia
     restart: unless-stopped
     env_file:
       - ../docker-secrets.env

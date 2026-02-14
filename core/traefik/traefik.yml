@@ -15,7 +15,7 @@ providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
-    network: lex-frontend
+    network: stratavore-frontend
   file:
     filename: /etc/traefik/dynamic.yml
     watch: true
