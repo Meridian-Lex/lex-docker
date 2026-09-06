@@ -39,7 +39,7 @@ services:
       start_period: 40s
 
   qdrant:
-    image: qdrant/qdrant:v1.17.0
+    image: qdrant/qdrant:v1.19.0
     container_name: stratavore-qdrant
     restart: unless-stopped
     ports:

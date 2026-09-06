@@ -18,7 +18,7 @@ volumes:
 
 services:
   prometheus:
-    image: prom/prometheus:v3.10.0
+    image: prom/prometheus:v3.14.0
     container_name: stratavore-prometheus
     restart: unless-stopped
     command:
@@ -43,7 +43,7 @@ services:
       start_period: 40s
 
   loki:
-    image: grafana/loki:3.6.7
+    image: grafana/loki:3.7.7
     container_name: stratavore-loki
     restart: unless-stopped
     ports:
