@@ -59,7 +59,7 @@ services:
       disable: true
 
   grafana:
-    image: grafana/grafana:11.6.12
+    image: grafana/grafana:11.6.16
     container_name: stratavore-grafana
     restart: unless-stopped
     env_file:
