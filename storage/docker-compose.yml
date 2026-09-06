@@ -123,7 +123,7 @@ services:
       start_period: 40s
 
   redis:
-    image: redis:7.4-alpine
+    image: redis:8.10-alpine
     container_name: stratavore-redis
     restart: unless-stopped
     command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
